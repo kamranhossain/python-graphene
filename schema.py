@@ -1,4 +1,5 @@
 import graphene
+import json
 
 
 class Query(graphene.ObjectType):
@@ -17,5 +18,15 @@ result = schema.execute(
     }
     """
 )
-
+# get in odict format
 print(result.data.items())
+
+# just get the return value
+print(result.data["hello"])
+
+# get in plain json format
+dictResult = dict(result.data.items())
+print(json.dumps(dictResult))
+
+# get in json indent format
+print(json.dumps(dictResult, indent=2))
