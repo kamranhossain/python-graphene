@@ -27,18 +27,33 @@ class Query(graphene.ObjectType):
         ][:limit]
 
 
-schema = graphene.Schema(query=Query)
+class CreateUser(graphene.Mutation):
+    user = graphene.Field(User)
+
+    class Arguments:
+        username = graphene.String()
+
+    def mutate(self, info, username):
+        user = User(id="3", username=username, created_at=datetime.now())
+        return CreateUser(user=user)
+
+
+class Mutation(graphene.ObjectType):
+    create_user = CreateUser.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
 
 result = schema.execute(
     """
-    {
-      hello
-      isAdmin
-      users {
-        id
-        username
-        createdAt
-      }
+    mutation {
+        createUser(username: "Jeff"){
+            user {
+                id
+                username
+                createdAt
+            }
+        }
     }
     """
 )
@@ -46,11 +61,11 @@ result = schema.execute(
 print(result.data.items())
 
 # just get the return value
-print(result.data["hello"])
+# print(result.data["hello"])
 
 # get in plain json format
 dictResult = dict(result.data.items())
-print(json.dumps(dictResult))
+# print(json.dumps(dictResult))
 
 # get in json indent format
 print(json.dumps(dictResult, indent=2))
