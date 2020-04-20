@@ -20,7 +20,7 @@ class Query(graphene.ObjectType):
     def resolve_is_admin(self, info):
         return True
 
-    def resolve_users(self, info, limit):
+    def resolve_users(self, info, limit=None):
         return [
             User(id="1", username="Fred", created_at=datetime.now()),
             User(id="2", username="Doug", created_at=datetime.now()),
@@ -34,7 +34,7 @@ result = schema.execute(
     {
       hello
       isAdmin
-      users(limit: 1) {
+      users {
         id
         username
         createdAt
